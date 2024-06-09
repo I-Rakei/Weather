@@ -1,5 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import 'bootstrap/dist/js/bootstrap.bundle.min'; // Ensure Bootstrap JS is imported for the collapse functionality
+import './Navbar.css'; 
 
 function MyNavbar() {
   return (
@@ -8,8 +10,8 @@ function MyNavbar() {
       <button
         className="navbar-toggler"
         type="button"
-        data-toggle="collapse"
-        data-target="#navbarNav"
+        data-bs-toggle="collapse"
+        data-bs-target="#navbarNav"
         aria-controls="navbarNav"
         aria-expanded="false"
         aria-label="Toggle navigation"
@@ -22,8 +24,8 @@ function MyNavbar() {
             <Link
               className="nav-link"
               to="/"
-              style={{ transition: 'color 0.3s ease' }}
-              onMouseEnter={(e) => (e.target.style.color = '#42f58a')}
+              style={{ transition: 'color 0.3s ease', color: 'white' }}
+              onMouseEnter={(e) => (e.target.style.color = '#8349e6')}
               onMouseLeave={(e) => (e.target.style.color = 'white')}
             >
               Home
@@ -33,8 +35,8 @@ function MyNavbar() {
             <Link
               className="nav-link"
               to="/page1"
-              style={{ transition: 'color 0.3s ease' }}
-              onMouseEnter={(e) => (e.target.style.color = '#42f58a')}
+              style={{ transition: 'color 0.3s ease', color: 'white' }}
+              onMouseEnter={(e) => (e.target.style.color = '#8349e6')}
               onMouseLeave={(e) => (e.target.style.color = 'white')}
             >
               Ver Tempo
