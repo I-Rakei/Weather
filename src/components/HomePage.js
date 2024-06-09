@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import './HomePage.css'; // Import CSS for styling
 
 function HomePage() {
@@ -9,7 +10,9 @@ function HomePage() {
         Esse é o meu resultado da avaliação SUM III do módulo Aceder a dados e serviços em aplicações web com 
         programação do lado do servidor.
       </p>
-      <button className="btn btn-primary" onClick={() => window.location.href = '/Page1'}>Ver o TEMPO</button>
+      <Link to="/page1" className="btn btn-primary">
+        Ver o TEMPO
+      </Link>
     </div>
   );
 }
