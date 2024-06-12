@@ -28,16 +28,36 @@ function Weather({ city }) {
     }
   }, [city]);
 
+  const handleDelete = () => {
+    setWeather(null);
+  };
+
+  const handleExportJSON = () => {
+    const dataStr = JSON.stringify(weather, null, 2);
+    const dataUri = 'data:application/json;charset=utf-8,' + encodeURIComponent(dataStr);
+
+    const exportFileDefaultName = 'weather_data.json';
+
+    let linkElement = document.createElement('a');
+    linkElement.setAttribute('href', dataUri);
+    linkElement.setAttribute('download', exportFileDefaultName);
+    linkElement.click();
+  };
+
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error fetching weather data</p>;
 
   return (
     <div>
       <ul>
-      <h2>Weather in {weather.name}</h2>
-      <li><p>Temperature: {(weather.main.temp - 273.15).toFixed(2)}°C</p></li>
-      <li><p>Weather: {weather.weather[0].description}</p></li>
+        <h2>Weather in {weather.name}</h2>
+        <li><p>Temperature: {(weather.main.temp - 273.15).toFixed(2)}°C</p></li>
+        <li><p>Weather: {weather.weather[0].description}</p></li>
       </ul>
+      <button className='btn btn-danger' onClick={handleDelete}>Delete</button> 
+      <br/>
+      <br/>
+      <button  className='btn btn-success' onClick={handleExportJSON}>Export to JSON</button>
     </div>
   );
 }
