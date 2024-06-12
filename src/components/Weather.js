@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
-function Weather({ city }) {
+function Weather({ city, onDelete }) {
   const [weather, setWeather] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [weatherStatus, setWeatherStatus] = useState(null);
+  const [deletionMessage, setDeletionMessage] = useState('');
 
   useEffect(() => {
     const fetchWeather = async () => {
@@ -21,6 +23,11 @@ function Weather({ city }) {
           }
         );
         setWeather(response.data);
+        // Check for custom header and update weather status
+        const customHeader = response.headers['weather-status'];
+        if (customHeader) {
+          setWeatherStatus(customHeader);
+        }
       } catch (error) {
         setError(error);
       } finally {
@@ -46,7 +53,9 @@ function Weather({ city }) {
           },
         }
       );
-      setWeather(null);
+      setWeather(null); // Clear weather data
+      setDeletionMessage('Data deleted successfully');
+      onDelete(); // Callback to parent component to handle deletion
     } catch (error) {
       setError(error);
     } finally {
@@ -66,26 +75,36 @@ function Weather({ city }) {
     linkElement.click();
   };
 
-  if (loading) return <p>Loading...</p>;
-  if (error) return <p>Error fetching weather data</p>;
-
-  return (
-    <div>
-      {weather && (
-        <ul>
-          <h2>Weather in {weather.name}</h2>
-          <li><p>Temperature: {(weather.main.temp - 273.15).toFixed(2)}°C</p></li>
-          <li><p>Weather: {weather.weather[0].description}</p></li>
-        </ul>
-      )}
-      <button className='btn btn-danger' onClick={handleDelete}>Delete</button> 
-      <br/>
-      <br/>
-      {weather && (
-        <button className='btn btn-success' onClick={handleExportJSON}>Export to JSON</button>
-      )}
-    </div>
-  );
+  if (loading) {
+    return <p>Loading...</p>;
+  } else if (error && !deletionMessage) {
+    return <p>Foi apagado os dados</p>;
+  } else if (deletionMessage) {
+    return <p>{deletionMessage}</p>;
+  } else {
+    return (
+      <div>
+        {weather && (
+          <ul>
+            <h2>Weather in {weather.name}</h2>
+            <li><p>Temperature: {(weather.main.temp - 273.15).toFixed(2)}°C</p></li>
+            <li><p>Weather: {weather.weather[0].description}</p></li>
+          </ul>
+        )}
+        {weatherStatus && (
+          <div>
+            <p>Weather status: {weatherStatus}</p>
+          </div>
+        )}
+        <button className='btn btn-danger' onClick={handleDelete}>Delete</button> 
+        <br/>
+        <br/>
+        {weather && (
+          <button className='btn btn-success' onClick={handleExportJSON}>Export to JSON</button>
+        )}
+      </div>
+    );
+  }
 }
 
 export default Weather;
