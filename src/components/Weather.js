@@ -1,4 +1,3 @@
-// Weather.js
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
@@ -13,7 +12,13 @@ function Weather({ city }) {
       setError(null);
       try {
         const response = await axios.get(
-          `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=169b6ce945ee3f09375f9069b38517f3`
+          `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=169b6ce945ee3f09375f9069b38517f3`,
+          {
+            headers: {
+              'Content-Type': 'application/json',
+              // Add any other headers you need for the GET request
+            },
+          }
         );
         setWeather(response.data);
       } catch (error) {
@@ -28,8 +33,25 @@ function Weather({ city }) {
     }
   }, [city]);
 
-  const handleDelete = () => {
-    setWeather(null);
+  const handleDelete = async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      await axios.delete(
+        `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=169b6ce945ee3f09375f9069b38517f3`,
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            // Add any other headers you need for the DELETE request
+          },
+        }
+      );
+      setWeather(null);
+    } catch (error) {
+      setError(error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleExportJSON = () => {
@@ -49,15 +71,19 @@ function Weather({ city }) {
 
   return (
     <div>
-      <ul>
-        <h2>Weather in {weather.name}</h2>
-        <li><p>Temperature: {(weather.main.temp - 273.15).toFixed(2)}°C</p></li>
-        <li><p>Weather: {weather.weather[0].description}</p></li>
-      </ul>
+      {weather && (
+        <ul>
+          <h2>Weather in {weather.name}</h2>
+          <li><p>Temperature: {(weather.main.temp - 273.15).toFixed(2)}°C</p></li>
+          <li><p>Weather: {weather.weather[0].description}</p></li>
+        </ul>
+      )}
       <button className='btn btn-danger' onClick={handleDelete}>Delete</button> 
       <br/>
       <br/>
-      <button  className='btn btn-success' onClick={handleExportJSON}>Export to JSON</button>
+      {weather && (
+        <button className='btn btn-success' onClick={handleExportJSON}>Export to JSON</button>
+      )}
     </div>
   );
 }
