@@ -14,7 +14,7 @@ function Weather({ city, onDelete }) {
       setError(null);
       try {
         const response = await axios.get(
-          `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=169b6ce945ee3f09375f9069b38517f3`,
+          `your key`,
           {
             headers: {
               'Content-Type': 'application/json',
